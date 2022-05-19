@@ -1,0 +1,48 @@
+# import Password from 'types.graphql'
+# import DateScalar from 'schema.graphql'
+
+type User {
+    _id: ID!
+    firstname: String!
+    lastname: String!
+    email: String!
+    password: String!
+    usedPasswords: [Password]
+    phone: String!
+    birthdate: String!
+    createdAt: DateScalar
+    updatedAt: DateScalar
+}
+
+type UserInfo {
+    _id: ID,
+    firstname: String!
+    lastname: String!
+    email: String!
+    phone: String
+    birthdate: String!
+    createdAt: DateScalar
+    updatedAt: DateScalar
+}
+
+type UserAuthenticated {
+    user: UserInfo!
+    accessToken: String!
+    refreshToken: String!
+}
+
+interface IUserResult {
+    status: Int!
+    message: String
+}
+
+type UserResult implements IUserResult {
+    status: Int!
+    message: String
+}
+
+type UserLogInResult implements IUserResult {
+    status: Int!
+    message: String
+    node: UserAuthenticated
+}

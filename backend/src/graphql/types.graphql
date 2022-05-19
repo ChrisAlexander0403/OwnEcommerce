@@ -1,0 +1,8 @@
+
+type Password {
+    password: String
+}
+
+input PasswordInput {
+    password: String
+}

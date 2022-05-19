@@ -1,0 +1,23 @@
+# import IUserResult, User from 'user.graphql'
+
+type Query {
+    hello: String!
+    currentUser(_id: ID): User
+}
+
+type Mutation {
+    register(
+        firstname: String!
+        lastname: String!
+        email: String!
+        password: String!
+        phone: String!
+        birthdate: String!
+    ): IUserResult
+    login(
+        email: String! 
+        password: String!
+    ): IUserResult
+}
+
+scalar DateScalar

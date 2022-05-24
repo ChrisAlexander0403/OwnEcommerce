@@ -1,7 +1,7 @@
 # import Password from 'types.graphql'
 # import DateScalar from 'schema.graphql'
 
-type User {
+type Client {
     _id: ID!
     firstname: String!
     lastname: String!
@@ -13,8 +13,8 @@ type User {
     updatedAt: DateScalar
 }
 
-type UserInfo {
-    _id: ID
+type ClientInfo {
+    _id: ID,
     firstname: String!
     lastname: String!
     email: String!
@@ -24,24 +24,24 @@ type UserInfo {
     updatedAt: DateScalar
 }
 
-type UserAuthenticated {
-    user: UserInfo!
+type ClientAuthenticated {
+    client: ClientInfo!
     accessToken: String!
     refreshToken: String!
 }
 
-interface IUserResponse {
+interface IClientResponse {
     status: Int!
     message: String
 }
 
-type UserResponse implements IUserResponse {
+type ClientResponse implements IClientResponse {
     status: Int!
     message: String
 }
 
-type GetCurrentUserResponse implements IUserResponse {
+type GetCurrentClientResponse implements IClientResponse {
     status: Int!
     message: String
-    currentUser: User
+    currentClient: ClientInfo!
 }

@@ -1,0 +1,45 @@
+# import ClientInfo from 'client.graphql'
+# import UserInfo from 'user.graphql'
+
+type Tokens {
+    accessToken: String!
+    refreshToken: String!
+}
+
+type ClientAuthenticated {
+    client: ClientInfo!
+    tokens: Tokens!
+}
+
+type UserAuthenticated {
+    user: UserInfo!
+    tokens: Tokens!
+}
+
+interface ISessionResponse {
+    status: Int!
+    message: String
+}
+
+type SessionResponse implements ISessionResponse {
+    status: Int!
+    message: String
+}
+
+type RefreshSessionResponse implements ISessionResponse {
+    status: Int!
+    message: String
+    tokens: Tokens!
+}
+
+type ClientLogInResponse implements ISessionResponse {
+    status: Int!
+    message: String
+    authenticatedClient: ClientAuthenticated
+}
+
+type UserLogInResponse implements ISessionResponse {
+    status: Int!
+    message: String
+    authenticatedUser: UserAuthenticated
+}

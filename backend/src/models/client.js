@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const userSchema = Schema({
+const clientSchema = Schema({
     firstname: {
         type: String,
         required: true
@@ -40,15 +40,22 @@ const userSchema = Schema({
             required: true
         }
     },
-    tokens: [{
-        type: String
-    }],
+    tokens: [String],
     type: {
         type: String,
         default: 'operator'
+    },
+    verificationCode: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true,
+        default: "UNVERIFIED"
     }
 },{
     timestamps: true
 });
 
-export default model('User', userSchema);
+export default model('Client', clientSchema);

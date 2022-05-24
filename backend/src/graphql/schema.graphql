@@ -1,23 +1,46 @@
-# import IUserResult, User from 'user.graphql'
+# import IUserResponse from 'user.graphql'
+# import ISessionResponse from 'session.graphql'
+# import IClientResponse from 'client.graphql'
 
 type Query {
     hello: String!
-    currentUser(_id: ID): User
+    currentUser: IUserResponse
+    currentClient: IClientResponse
 }
 
 type Mutation {
-    register(
+    login(
+        email: String! 
+        password: String!
+    ): ISessionResponse
+    refreshUserSession(
+        refreshToken: String
+    ): ISessionResponse
+    refreshClientSession(
+        refreshToken: String
+    ): ISessionResponse
+
+    userRegister(
         firstname: String!
         lastname: String!
         email: String!
         password: String!
         phone: String!
         birthdate: String!
-    ): IUserResult
-    login(
-        email: String! 
+    ): IUserResponse
+
+    clientRegister(
+        firstname: String!
+        lastname: String!
+        email: String!
         password: String!
-    ): IUserResult
+        phone: String!
+        birthdate: String!
+    ): IClientResponse
+
+    confirmClientAccount(
+        token: String!
+    ): IClientResponse
 }
 
 scalar DateScalar

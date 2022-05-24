@@ -6,8 +6,10 @@ import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { addResolversToSchema } from '@graphql-tools/schema';
 import { join } from 'path';
+// import jwt from 'jsonwebtoken';
 
 import resolvers from './graphql/resolvers';
+import authenticate from './middlewares/auth';
 
 const schema = loadSchemaSync(join(__dirname, 'graphql/schema.graphql'), {
     loaders: [new GraphQLFileLoader()]
@@ -23,6 +25,20 @@ app.use(cors());
 app.use(express.json());
 // app.use(fileUpload());
 app.use(express.static('public'));
+// app.use((req, res, next) => {
+//     const authHeader = req.headers['authorization'];
+//     if (authHeader) {
+//         const token = authHeader.split(' ')[1]
+//         try {
+//             const { _id } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+//             req.user = _id;
+//         } catch {
+
+//         }
+//     }
+//     next();
+// })
+app.use(authenticate);
 app.use('/graphql', graphqlHTTP({
     schema: addResolversToSchema({
         schema,

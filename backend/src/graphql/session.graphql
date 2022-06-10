@@ -1,4 +1,4 @@
-# import ClientInfo from 'client.graphql'
+# import Client from 'client.graphql'
 # import UserInfo from 'user.graphql'
 
 type Tokens {
@@ -7,7 +7,7 @@ type Tokens {
 }
 
 type ClientAuthenticated {
-    client: ClientInfo!
+    client: Client!
     tokens: Tokens!
 }
 

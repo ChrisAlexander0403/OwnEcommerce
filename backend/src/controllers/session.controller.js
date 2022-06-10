@@ -1,22 +1,50 @@
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from 'uuid';
 
-// import transporter from "../utils/mailer";
+import transporter from "../config/mailer";
+import redisClient from "../config/redis";
 import User from "../models/user";
 import Client from "../models/client";
 import { decryptData } from "../utils/encryption";
-import { generateAccessToken, generateRefreshToken } from "../utils/authentication";
+import { generateAccessToken, generateRefreshToken, generateToken } from "../utils/authentication";
+import verifyAccountLayout from '../mails/verifyAccount.layout';
 
-export const login = async (_, { email, password }) => {
+export const login = async (_, { email, password }, req) => {
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     email = email.toLowerCase();
 
-    const client = await Client.findOne({ email: email });
+    const client = await Client.findOne({ email });
     
     if (client) {
+        if (client.status === 'UNVERIFIED') {
+            return {
+                status: 401,
+                message: "Confirm account to proceed"
+            }
+        }
+
+        if (client.status === 'BLOCKED') {
+            return {
+                status: 403,
+                message: "Forbidden"
+            }
+        }
+
+        let key = ip + '_' + email;
+        let attempts = key + '_attempts';
+
         if (await bcrypt.compare(password, client.password)) {
             const accessToken = generateAccessToken(client);
             const refreshToken = generateRefreshToken(client);
             await Client.updateOne({ email: email }, { $push: { tokens: refreshToken } });
+
+            try {
+                await redisClient.del(attempts);
+                await redisClient.del(key);
+            } catch {
+
+            }
 
             return {
                 status: 200,
@@ -38,6 +66,47 @@ export const login = async (_, { email, password }) => {
                     }
                 }
             }
+        }
+
+        try {
+            let [response] = await redisClient.multi().incr(key).exec();
+            if (response[1] === 1) await redisClient.expire(key, 60*60);
+            if (response[1] >= 5) {
+                if (response[1] === 5){
+                    let [attemptsResponse] = await redisClient.multi().incr(attempts).exec();
+                    if (attemptsResponse[1] === 1) {
+                        await redisClient.expire(key, 60);
+                        await redisClient.expire(attempts, 60*60);
+                    }
+                    if (attemptsResponse[1] === 2) await redisClient.expire(key, 60*5);
+                    if (attemptsResponse[1] === 3) await redisClient.expire(key, 60*60);
+                    if (attemptsResponse[1] === 4) {
+                        const code = uuidv4();
+                        const encryptedCode = await bcrypt.hash(code, 12);  
+                        const client = await Client.findOne({ email });
+                        client.verificationCode = encryptedCode;
+                        client.status = 'BLOCKED';
+                        await client.save();
+                        const token = generateToken({ email, code });
+                        await transporter.sendMail({
+                            from: '"Fred Foo" <foo@example.com>',
+                            to: email,
+                            subject: 'Seguridad de la cuenta',
+                            text: 'Seguridad de la cuenta',
+                            html: verifyAccountLayout(decryptData(email, client.firstname))
+                        });
+                        console.log(token);
+
+                        return {
+                            status: 403,
+                            message: "Forbidden"
+                        }
+                    }
+                }
+                return new Error(`Too many attemps, try again in ${await redisClient.ttl(key)}`);
+            }
+        } catch(e) {
+            console.log(e);
         }
 
         return {

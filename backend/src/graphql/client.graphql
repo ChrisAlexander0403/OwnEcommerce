@@ -6,28 +6,10 @@ type Client {
     firstname: String!
     lastname: String!
     email: String!
-    password: String!
     phone: String!
     birthdate: String!
     createdAt: DateScalar
     updatedAt: DateScalar
-}
-
-type ClientInfo {
-    _id: ID,
-    firstname: String!
-    lastname: String!
-    email: String!
-    phone: String
-    birthdate: String!
-    createdAt: DateScalar
-    updatedAt: DateScalar
-}
-
-type ClientAuthenticated {
-    client: ClientInfo!
-    accessToken: String!
-    refreshToken: String!
 }
 
 interface IClientResponse {
@@ -43,5 +25,11 @@ type ClientResponse implements IClientResponse {
 type GetCurrentClientResponse implements IClientResponse {
     status: Int!
     message: String
-    currentClient: ClientInfo!
+    currentClient: Client!
+}
+
+type GetUpdatedClientResponse implements IClientResponse {
+    status: Int!
+    message: String
+    updatedClient: Client!
 }

@@ -4,6 +4,7 @@ import DateScalar from './DateScalar';
 import IClientResponse from './responses/IClientResponse';
 import IUserResponse from './responses/IUserResponse';
 import ISessionResponse from './responses/ISessionResponse';
+import IShippingAddressResponse from './responses/IShippingAddressResponse';
 
 export default {
     Query,
@@ -11,5 +12,6 @@ export default {
     DateScalar,
     IClientResponse,
     IUserResponse,
-    ISessionResponse
+    ISessionResponse,
+    IShippingAddressResponse
 }

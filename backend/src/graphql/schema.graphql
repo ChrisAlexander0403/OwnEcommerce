@@ -1,11 +1,14 @@
 # import IUserResponse from 'user.graphql'
 # import ISessionResponse from 'session.graphql'
 # import IClientResponse from 'client.graphql'
+# import IShippingAddressResponse from 'shippingAddress.graphql'
 
 type Query {
     hello: String!
     currentUser: IUserResponse
     currentClient: IClientResponse
+    getClientShippingAddresses: IShippingAddressResponse
+    getClientShippingAddress(_id: ID!): IShippingAddressResponse
 }
 
 type Mutation {
@@ -41,6 +44,56 @@ type Mutation {
     confirmClientAccount(
         token: String!
     ): IClientResponse
+
+    clientForgotPassword(
+        email: String!
+    ): IClientResponse
+
+    clientResetPassword(
+        token: String
+        newPassword: String!
+    ): IClientResponse
+
+    clientChangePassword(
+        password: String!
+        newPassword: String!
+    ): IClientResponse
+
+    clientUpdateInfo(
+        firstname: String
+        lastname: String
+        phone: String
+        birthdate: String
+    ): IClientResponse
+
+    addShippingAddress(
+        name: String!
+        street: String!
+        number: String!
+        neighborhood: String!
+        city: String!
+        state: String!
+        country: String!
+        zipCode: String!
+        location: String
+    ): IShippingAddressResponse
+
+    updateClientShippingAddress(
+        _id: ID!
+        name: String
+        street: String
+        number: String
+        neighborhood: String
+        city: String
+        state: String
+        country: String
+        zipCode: String
+        location: String
+    ): IShippingAddressResponse
+
+    deleteClientShippingAddress(
+        _id: ID!
+    ): IShippingAddressResponse
 }
 
 scalar DateScalar

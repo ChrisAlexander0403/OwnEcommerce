@@ -1,4 +1,5 @@
 import { currentClient } from "../../controllers/client.controller";
+import { getClientShippingAddress, getClientShippingAddresses } from "../../controllers/shippingAddress.controller";
 import { currentUser } from "../../controllers/user.controller";
 
 
@@ -8,7 +9,9 @@ const Query = {
     currentUser: currentUser,
 
     //Client Controller
-    currentClient: currentClient
+    currentClient: currentClient,
+    getClientShippingAddresses: getClientShippingAddresses,
+    getClientShippingAddress: getClientShippingAddress
 }
 
 export default Query;

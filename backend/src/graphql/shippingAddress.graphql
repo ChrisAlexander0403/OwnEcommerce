@@ -1,0 +1,36 @@
+type ShippingAddress {
+    _id: ID!
+    name: String!
+    street: String!
+    number: String!
+    neighborhood: String!
+    city: String!
+    state: String!
+    country: String!
+    zipCode: String!
+    location: String
+    createdAt: String
+    updatedAt: String
+}
+
+interface IShippingAddressResponse {
+    status: Int!
+    message: String
+}
+
+type ShippingAddressResponse implements IShippingAddressResponse {
+    status: Int!
+    message: String
+}
+
+type GetClientShippingAddressesResponse implements IShippingAddressResponse {
+    status: Int!
+    message: String
+    shippingAddresses: [ShippingAddress]
+}
+
+type GetClientShippingAddressResponse implements IShippingAddressResponse {
+    status: Int!
+    message: String,
+    shippingAddress: ShippingAddress
+}

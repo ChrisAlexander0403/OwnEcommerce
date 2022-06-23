@@ -10,6 +10,7 @@ const accessorySchema = new Schema({
     price: { type: Number, required: true },
     discount: { type: Number, max: 100 },
     inStock: { type: Number, default: 0 },
+    status: { type: String, default: "ACTIVE", required: true },
     images: [String]
 }, {
     timestamps: true

@@ -6,28 +6,9 @@ type User {
     firstname: String!
     lastname: String!
     email: String!
-    password: String!
-    phone: String!
-    birthdate: String!
+    rol: String!
     createdAt: DateScalar
     updatedAt: DateScalar
-}
-
-type UserInfo {
-    _id: ID
-    firstname: String!
-    lastname: String!
-    email: String!
-    phone: String
-    birthdate: String!
-    createdAt: DateScalar
-    updatedAt: DateScalar
-}
-
-type UserAuthenticated {
-    user: UserInfo!
-    accessToken: String!
-    refreshToken: String!
 }
 
 interface IUserResponse {

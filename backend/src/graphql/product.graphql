@@ -1,0 +1,28 @@
+type Accessory {
+    _id: ID!
+    sku: String!
+    model: String!
+    name: String!
+    branch: String!
+    color: String!
+    description: String!
+    price: Int!
+    discount: Int
+    inStock: Int!
+}
+
+interface IProductResponse {
+    status: Int!
+    message: String
+}
+
+type ProductResponse implements IProductResponse {
+    status: Int!
+    message: String
+}
+
+type GetAccessoryResponse implements IProductResponse {
+    status: Int!
+    message: String,
+    Accessory: Accessory
+}

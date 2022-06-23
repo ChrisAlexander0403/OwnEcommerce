@@ -19,33 +19,12 @@ const userSchema = new Schema({
         required: true
     },
     usedPasswords: [String],
-    phone: {
+    profilePicture: String,
+    tokens: [String],
+    rol: {
         type: String,
+        default: 'OPERATIVE',
         required: true
-    },
-    profilePicture: {
-        type: String
-    },
-    birthdate: {
-        type: String,
-        required: true
-    },
-    encryption: {
-        public: {
-            type: String,
-            required: true
-        },
-        iv: {
-            type: String,
-            required: true
-        }
-    },
-    tokens: [{
-        type: String
-    }],
-    type: {
-        type: String,
-        default: 'operator'
     }
 },{
     timestamps: true

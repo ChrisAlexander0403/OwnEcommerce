@@ -1,4 +1,5 @@
 import { clientChangePassword, clientForgotPassword, clientRegister, clientResetPassword, clientUpdateInfo, confirmClientAccount } from "../../controllers/client.controller";
+import { createAccessory, deleteAccessory, editAccessory } from "../../controllers/product.controller";
 import { login, refreshClientSession, refreshUserSession } from "../../controllers/session.controller";
 import { addShippingAddress, updateClientShippingAddress, deleteClientShippingAddress } from "../../controllers/shippingAddress.controller";
 import { userRegister } from "../../controllers/user.controller";
@@ -22,7 +23,12 @@ const Mutation = {
     clientUpdateInfo: clientUpdateInfo,
     addShippingAddress: addShippingAddress,
     updateClientShippingAddress: updateClientShippingAddress,
-    deleteClientShippingAddress: deleteClientShippingAddress
+    deleteClientShippingAddress: deleteClientShippingAddress,
+
+    //Product Controller
+    createAccessory: createAccessory,
+    editAccessory: editAccessory,
+    deleteAccessory: deleteAccessory
 }
 
 export default Mutation;

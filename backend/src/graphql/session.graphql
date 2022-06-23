@@ -1,5 +1,5 @@
 # import Client from 'client.graphql'
-# import UserInfo from 'user.graphql'
+# import User from 'user.graphql'
 
 type Tokens {
     accessToken: String!
@@ -12,7 +12,7 @@ type ClientAuthenticated {
 }
 
 type UserAuthenticated {
-    user: UserInfo!
+    user: User!
     tokens: Tokens!
 }
 

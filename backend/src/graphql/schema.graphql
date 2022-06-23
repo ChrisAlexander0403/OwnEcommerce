@@ -28,8 +28,7 @@ type Mutation {
         lastname: String!
         email: String!
         password: String!
-        phone: String!
-        birthdate: String!
+        rol: String!
     ): IUserResponse
 
     clientRegister(

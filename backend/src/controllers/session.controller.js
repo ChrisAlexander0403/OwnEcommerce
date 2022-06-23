@@ -6,7 +6,7 @@ import transporter from "../config/mailer";
 import redisClient from "../config/redis";
 import User from "../models/user";
 import Client from "../models/client";
-import { decryptData } from "../utils/encryption";
+import { decryptAppData } from "../utils/encryption";
 import { generateAccessToken, generateRefreshToken, generateToken } from "../utils/authentication";
 import verifyAccountLayout from '../mails/verifyAccount.layout';
 
@@ -115,47 +115,54 @@ export const login = async (_, { email, password }, req) => {
         }
 
     }
+    try {
+        const user = await User.findOne({ email });
 
-    const user = await User.findOne({ email: email });
+        if (user) {
+            if (await bcrypt.compare(password, user.password)) {
+                const accessToken = generateAccessToken(user);
+                const refreshToken = generateRefreshToken(user);
+                await User.updateOne({ email }, { $push: { tokens: refreshToken } });
 
-    if (user) {
-        if (await bcrypt.compare(password, user.password)) {
-            const accessToken = generateAccessToken(user);
-            const refreshToken = generateRefreshToken(user);
-            await User.updateOne({ email: email }, { $push: { tokens: refreshToken } });
-
-            return {
-                status: 200,
-                message: 'Logged in successfully',
-                authenticatedUser: {
-                    user: {
-                        _id: user._id,
-                        firstname: decryptData(email, user.firstname),
-                        lastname: decryptData(email, user.lastname),
-                        email: user.email,
-                        phone: decryptData(email, user.phone),
-                        birthdate: decryptData(email, user.birthdate),
-                        createdAt: user.createdAt,
-                        updatedAt: user.updatedAt
-                    },
-                    tokens: {
-                        accessToken: accessToken,
-                        refreshToken: refreshToken
+                return {
+                    status: 200,
+                    message: 'Logged in successfully',
+                    authenticatedUser: {
+                        user: {
+                            _id: user._id,
+                            firstname: decryptAppData(user.firstname),
+                            lastname: decryptAppData(user.lastname),
+                            email: user.email,
+                            rol: user.rol,
+                            createdAt: user.createdAt,
+                            updatedAt: user.updatedAt
+                        },
+                        tokens: {
+                            accessToken: accessToken,
+                            refreshToken: refreshToken
+                        }
                     }
                 }
             }
+
+            return {
+                status: 400,
+                message: "Incorrect password"
+            }
         }
 
+        return { 
+            status: 404,
+            message: 'User not found'
+        }
+    } catch(e) {
+        console.log(e)
         return {
-            status: 400,
-            message: "Incorrect password"
+            status: 500,
+            message: "something went wrong"
         }
     }
-
-    return { 
-        status: 404,
-        message: 'Client not found'
-    }
+    
 }
 
 export const refreshUserSession = async (_, { refreshToken }) => {

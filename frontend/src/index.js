@@ -1,17 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import { Provider } from 'react-redux';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import { createUploadLink } from 'apollo-upload-client';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import store from './features/store';
+
+let persistor = persistStore(store);
+
+const link = createUploadLink({
+  uri: "http://localhost:5000/graphql",
+  credentials: 'same-origin'
+});
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache()
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <ApolloProvider client={client}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
+  </ApolloProvider>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

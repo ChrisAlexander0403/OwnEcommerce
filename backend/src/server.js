@@ -1,12 +1,12 @@
 import express from 'express';
 import { graphqlHTTP } from "express-graphql";
 import depthLimit from 'graphql-depth-limit';
-// import fileUpload from 'express-fileupload';
 import cors from 'cors';
 import helmet from 'helmet';
 import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { addResolversToSchema } from '@graphql-tools/schema';
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { join } from 'path';
 
 import resolvers from './graphql/resolvers';
@@ -34,10 +34,11 @@ app.set('trust proxy', true)
 //middlewares
 app.use(cors());
 app.use(express.json());
-app.use(helmet());
-// app.use(fileUpload());
 app.use(express.static('public'));
 app.use(rateLimiter);
+app.use(graphqlUploadExpress({ maxFiles: 10 }));
+
+app.use(helmet({ contentSecurityPolicy: (process.env.NODE_ENV === 'production') ? undefined : false }));
 
 app.use('/graphql', graphqlHTTP({
     schema,

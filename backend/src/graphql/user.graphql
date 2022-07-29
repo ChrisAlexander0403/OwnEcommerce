@@ -6,7 +6,10 @@ type User {
     firstname: String!
     lastname: String!
     email: String!
+    phone: String!
     rol: String!
+    profilePicture: String
+    status: String!
     createdAt: DateScalar
     updatedAt: DateScalar
 }
@@ -25,4 +28,16 @@ type GetCurrentUserResponse implements IUserResponse {
     status: Int!
     message: String
     currentUser: User
+}
+
+type GetUsersResponse implements IUserResponse {
+    status: Int!
+    message: String
+    users: [User]
+}
+
+type GetUserResponse implements IUserResponse {
+    status: Int!
+    message: String
+    user: User
 }

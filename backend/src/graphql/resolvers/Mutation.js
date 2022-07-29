@@ -1,8 +1,8 @@
 import { clientChangePassword, clientForgotPassword, clientRegister, clientResetPassword, clientUpdateInfo, confirmClientAccount } from "../../controllers/client.controller";
-import { createAccessory, deleteAccessory, editAccessory } from "../../controllers/product.controller";
+import { createAccessory, createPhone, deleteAccessory, editAccessory } from "../../controllers/product.controller";
 import { login, refreshClientSession, refreshUserSession } from "../../controllers/session.controller";
 import { addShippingAddress, updateClientShippingAddress, deleteClientShippingAddress } from "../../controllers/shippingAddress.controller";
-import { userRegister } from "../../controllers/user.controller";
+import { deleteUser, userRegister } from "../../controllers/user.controller";
 
 const Mutation = {
     //Session Controller
@@ -12,6 +12,7 @@ const Mutation = {
 
     //User Controller
     userRegister: userRegister,
+    deleteUser: deleteUser,
     //userForgotPassword: userForgotPassword,
     
     //Client Controller
@@ -26,6 +27,7 @@ const Mutation = {
     deleteClientShippingAddress: deleteClientShippingAddress,
 
     //Product Controller
+    createPhone: createPhone,
     createAccessory: createAccessory,
     editAccessory: editAccessory,
     deleteAccessory: deleteAccessory

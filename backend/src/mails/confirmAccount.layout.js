@@ -1,4 +1,4 @@
-const confirmAccountLayout = (firstname) => {
+const confirmAccountLayout = (firstname, code) => {
     return `
         <!DOCTYPE html
             PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -125,7 +125,7 @@ const confirmAccountLayout = (firstname) => {
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <a href="#" style="margin: 0 140px; padding: 20px 25px; outline: none; border: none; 
+                                                                    <a href="http://localhost:3000/confirm-account/${code}" style="margin: 0 140px; padding: 20px 25px; outline: none; border: none; 
                                                                         border-radius: 15px; background-color: #220050; color: #ffffff; font-size: 16px;
                                                                         text-decoration: none;">Confirmar cuenta</a>
                                                                 </td>

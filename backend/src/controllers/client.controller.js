@@ -2,7 +2,7 @@ import Client from "../models/client";
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 
-import { decryptData, encryptData, generateKeys } from "../utils/encryption";
+import { decryptAppData, encryptAppData, generateKeys } from "../utils/encryption";
 import forgotPasswordLayout from "../mails/forgotPassword.layout";
 import confirmAccountLayout from "../mails/confirmAccount.layout";
 import transporter from "../config/mailer";
@@ -23,18 +23,17 @@ export const clientRegister = async (_, { firstname, lastname, email, password, 
         const publicKey = generateKeys(email);
         const encryptedPassword = await bcrypt.hash(password, 12);
         const code = uuidv4();
-        const encryptedCode = await bcrypt.hash(code, 12);
 
         try {
             const newClient = new Client({
-                firstname: encryptData(publicKey, firstname),
-                lastname: encryptData(publicKey, lastname),
+                firstname: encryptAppData(firstname),
+                lastname: encryptAppData(lastname),
                 email: email,
                 password: encryptedPassword,
-                phone: encryptData(publicKey, phone),
-                birthdate: encryptData(publicKey, birthdate),
+                phone: encryptAppData(phone),
+                birthdate: encryptAppData(birthdate),
                 publicKey: publicKey,
-                verificationCode: encryptedCode
+                verificationCode: code
             });
             const token = generateToken({ email, code });
             await transporter.sendMail({
@@ -42,9 +41,8 @@ export const clientRegister = async (_, { firstname, lastname, email, password, 
                 to: email,
                 subject: 'Verificación de cuenta',
                 text: 'Verificación de cuenta',
-                html: confirmAccountLayout(firstname)
+                html: confirmAccountLayout(firstname, token)
             });
-            console.log(token);
             await newClient.save();
             return {
                 status: 201,
@@ -87,7 +85,7 @@ export const confirmClientAccount = async (_, { token }, ctx) => {
             }
         }
 
-        if (await bcrypt.compare(code, client.verificationCode)) {
+        if (code === client.verificationCode) {
             client.status = "ACTIVE";
             await client.save();
 
@@ -125,17 +123,15 @@ export const clientForgotPassword = async (_, { email }, ctx) => {
 
         await client.save();
 
-        const token = generateToken({ email, code });
+        const token = generateToken({ email, code }, '24h');
 
         await transporter.sendMail({
             from: '"OwnEcommerce" <chrisalexvazquez0211@gmail.com>',
             to: email,
             subject: "Recuperar contraseña",
             text: "Recuperar contraseña",
-            html: forgotPasswordLayout(decryptData(email, client.firstname))
+            html: forgotPasswordLayout(decryptAppData(client.firstname), token)
         });
-
-        console.log(token);
 
         return {
             status: 200,
@@ -281,10 +277,10 @@ export const clientUpdateInfo = async (_, args, { email, clientKey }) => {
             }
         }
 
-        if (args.firstname) client.firstname = encryptData(clientKey, args.firstname);
-        if (args.lastname) client.lastname = encryptData(clientKey, args.lastname);
-        if (args.phone) client.phone = encryptData(clientKey, args.phone);
-        if (args.birthdate) client.birthdate = encryptData(clientKey, args.birthdate);
+        if (args.firstname) client.firstname = encryptAppData(args.firstname);
+        if (args.lastname) client.lastname = encryptAppData(args.lastname);
+        if (args.phone) client.phone = encryptAppData(args.phone);
+        if (args.birthdate) client.birthdate = encryptAppData(args.birthdate);
 
         await client.save();
 
@@ -293,11 +289,11 @@ export const clientUpdateInfo = async (_, args, { email, clientKey }) => {
             message: "Client updated",
             updatedClient: {
                 _id: client._id,
-                firstname: decryptData(email, client.firstname),
-                lastname: decryptData(email, client.lastname),
+                firstname: decryptAppData(email),
+                lastname: decryptAppData(email),
                 email: email,
-                phone: decryptData(email, client.phone),
-                birthdate: decryptData(email, client.birthdate),
+                phone: decryptAppData(email),
+                birthdate: decryptAppData(email),
                 createdAt: client.createdAt,
                 updatedAt: client.updatedAt
             }
@@ -321,11 +317,11 @@ export const currentClient = async (_, args, { email }) => {
                 message: "Client found successfully",
                 currentClient: {
                     _id: client._id,
-                    firstname: decryptData(email, client.firstname),
-                    lastname: decryptData(email, client.lastname),
+                    firstname: decryptAppData(email),
+                    lastname: decryptAppData(email),
                     email: client.email,
-                    phone: decryptData(email, client.phone),
-                    birthdate: decryptData(email, client.birthdate),
+                    phone: decryptAppData(email),
+                    birthdate: decryptAppData(email),
                     createdAt: client.createdAt,
                     updatedAt: client.updatedAt
                 }
@@ -341,5 +337,38 @@ export const currentClient = async (_, args, { email }) => {
             status: 500,
             message: "Something went wrong"
         };
+    }
+}
+
+export const getClients = async (_, args, ctx) => {
+    try {
+        let decryptedClients = [];
+        const clients = await Client.find();
+        for (let i = 0; i < clients.length; i++) {
+            decryptedClients.push({
+                _id: clients[i]._id,
+                firstname: decryptAppData(clients[i].firstname),
+                lastname: decryptAppData(clients[i].lastname),
+                email: clients[i].email,
+                phone: decryptAppData(clients[i].phone),
+                birthdate: decryptAppData(clients[i].birthdate),
+                profilePicture: clients[i].profilePicture,
+                status: clients[i].status,
+                isSubscribed: clients[i].isSubscribed,
+                createdAt: clients[i].createdAt,
+                updatedAt: clients[i].updatedAt
+            });
+        }
+
+        return {
+            status: 200,
+            message: "Customers found successfully",
+            clients: decryptedClients
+        }
+    } catch {
+        return {
+            status: 500,
+            message: "Something went wrong"
+        }
     }
 }

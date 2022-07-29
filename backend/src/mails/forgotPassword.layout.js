@@ -1,4 +1,4 @@
-const forgotPasswordLayout = (firstname) => {
+const forgotPasswordLayout = (firstname, token) => {
     return `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -113,7 +113,8 @@ const forgotPasswordLayout = (firstname) => {
                                                     <tr>
                                                         <td>
                                                             <p class="mailbody">Se ha realizado una solicitud de restablecimiento de 
-                                                                contraseña en tu cuenta de Intecel.</p>
+                                                                contraseña en tu cuenta de Intecel. La solicitud vence en 24 horas, posteriormente, 
+                                                                deberás volver a solicitar el cambio de contraseña.</p>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -124,7 +125,7 @@ const forgotPasswordLayout = (firstname) => {
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <a href="#" style="margin: 0 120px; padding: 20px 25px; outline: none; border: none; 
+                                                            <a href="http://localhost:3000/recovery/reset-password/${token}" style="margin: 0 120px; padding: 20px 25px; outline: none; border: none; 
                                                                 border-radius: 15px; background-color: #220050; color: #ffffff; font-size: 16px;
                                                                 text-decoration: none;">Restablecer 
                                                                 Contraseña</a>

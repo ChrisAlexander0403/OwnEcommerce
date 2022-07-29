@@ -8,6 +8,9 @@ type Client {
     email: String!
     phone: String!
     birthdate: String!
+    profilePicture: String
+    status: String
+    isSubscribed: Boolean!
     createdAt: DateScalar
     updatedAt: DateScalar
 }
@@ -32,4 +35,10 @@ type GetUpdatedClientResponse implements IClientResponse {
     status: Int!
     message: String
     updatedClient: Client!
+}
+
+type GetClientsResponse implements IClientResponse {
+    status: Int!
+    message: String
+    clients: [Client]
 }

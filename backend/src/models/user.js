@@ -18,14 +18,19 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: String,
+        required: true
+    },
     usedPasswords: [String],
     profilePicture: String,
-    tokens: [String],
     rol: {
         type: String,
         default: 'OPERATIVE',
         required: true
-    }
+    },
+    status: { type: String, required: true },
+    tokens: [String],
 },{
     timestamps: true
 });

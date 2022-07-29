@@ -2,13 +2,22 @@
 # import ISessionResponse from 'session.graphql'
 # import IClientResponse from 'client.graphql'
 # import IShippingAddressResponse from 'shippingAddress.graphql'
+# import IProductResponse from 'product.graphql'
+# import ImageInput from 'types.graphql'
 
 type Query {
     hello: String!
     currentUser: IUserResponse
+    getUsers: IUserResponse
+    getUser(_id: ID!): IUserResponse
     currentClient: IClientResponse
+    getClients: IClientResponse
     getClientShippingAddresses: IShippingAddressResponse
     getClientShippingAddress(_id: ID!): IShippingAddressResponse
+    getPhones: IProductResponse
+    getPhone(_id: ID!): IProductResponse
+    getAccessories: IProductResponse
+    getAccessory: IProductResponse
 }
 
 type Mutation {
@@ -28,8 +37,12 @@ type Mutation {
         lastname: String!
         email: String!
         password: String!
+        phone: String!
         rol: String!
+        profilePicture: String
     ): IUserResponse
+
+    deleteUser(_id: ID!): IUserResponse
 
     clientRegister(
         firstname: String!
@@ -93,6 +106,59 @@ type Mutation {
     deleteClientShippingAddress(
         _id: ID!
     ): IShippingAddressResponse
+
+    createPhone(
+        sku: String!
+        model: String!
+        name: String!
+        brand: String!
+        color: String!
+        display: String!
+        memory: String!
+        storage: String!
+        connectivity: String!
+        battery: String!
+        SO: String!
+        dimensions: String!
+        cameras: String!
+        # fingerprint: String!
+        description: String!
+        price: Float!
+        discount: Float
+        inStock: Int
+        images: [Upload]!
+    ): IProductResponse
+
+    createAccessory(
+        sku: String! 
+        model: String!
+        name: String!
+        brand: String!
+        color: String!
+        description: String!
+        price: Float!
+        discount: Float
+        inStock: Int
+        images: [Upload]!
+    ): IProductResponse
+
+    editAccessory(
+        sku: String! 
+        model: String
+        name: String
+        branch: String
+        color: String
+        description: String
+        price: Int
+        discount: Int
+        inStock: Int
+        images: [ImageInput]
+    ): IProductResponse
+
+    deleteAccessory(
+        sku: String!
+    ): IProductResponse
 }
 
-scalar DateScalar
+scalar DateScalar 
+scalar Upload

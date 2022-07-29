@@ -6,3 +6,17 @@ type Password {
 input PasswordInput {
     password: String
 }
+
+type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+}
+
+type Image {
+    image: String
+}
+
+input ImageInput {
+    image: String
+}

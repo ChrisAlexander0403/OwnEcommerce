@@ -77,7 +77,7 @@ export const encryptAppData = (data) => {
 
 export const decryptAppData = (data) => {
     const key = fs.readFileSync(path.resolve(__dirname, `../../private/appKeys/private.pem`), 'utf8');
-    const decrypted = privateDecrypt({
+    return privateDecrypt({
         key,
         passphrase: process.env.APP_PASSPHRASE,
         padding: constants.RSA_PKCS1_OAEP_PADDING,
@@ -85,8 +85,6 @@ export const decryptAppData = (data) => {
     },
         Buffer.from(data, "base64")
     ).toString('utf8');
-
-    return decrypted
 }
 
 export const generateKeys = (id) => {

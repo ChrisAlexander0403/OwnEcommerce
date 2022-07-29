@@ -1,14 +1,38 @@
+type Phone {
+    _id: ID
+    sku: String!
+    model: String!
+    name: String!
+    brand: String!
+    color: String!
+    display: String!
+    memory: String!
+    storage: String!
+    connectivity: String!
+    battery: String!
+    SO: String!
+    dimensions: String!
+    cameras: String!
+    fingerprint: String!
+    description: String!
+    price: Float!
+    discount: Float
+    inStock: Int
+    images: [String!]
+}
+
 type Accessory {
     _id: ID!
     sku: String!
     model: String!
     name: String!
-    branch: String!
+    brand: String!
     color: String!
     description: String!
     price: Int!
     discount: Int
     inStock: Int!
+    images: [String]!
 }
 
 interface IProductResponse {
@@ -21,8 +45,26 @@ type ProductResponse implements IProductResponse {
     message: String
 }
 
+type GetAccessoriesResponse implements IProductResponse {
+    status: Int!
+    message: String
+    accessories: [Accessory]
+}
+
 type GetAccessoryResponse implements IProductResponse {
     status: Int!
-    message: String,
-    Accessory: Accessory
+    message: String
+    accessory: Accessory
+}
+
+type GetPhoneResponse implements IProductResponse {
+    status: Int!
+    message: String
+    phone: Phone
+}
+
+type GetPhonesResponse implements IProductResponse {
+    status: Int!
+    message: String
+    phones: [Phone]
 }

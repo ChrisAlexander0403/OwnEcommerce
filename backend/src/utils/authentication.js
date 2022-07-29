@@ -24,11 +24,11 @@ export const generateRefreshToken = (user) => {
 //     });
 // }
 
-export const generateToken = (payload) => {
+export const generateToken = (payload, time) => {
     return jwt.sign({
         data: payload
     }, process.env.TOKEN_SECRET, {
-        expiresIn: '7d'
+        expiresIn: time ? time : '7d'
     });
 }
 

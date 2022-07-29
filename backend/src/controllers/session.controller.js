@@ -10,8 +10,8 @@ import { decryptAppData } from "../utils/encryption";
 import { generateAccessToken, generateRefreshToken, generateToken } from "../utils/authentication";
 import verifyAccountLayout from '../mails/verifyAccount.layout';
 
-export const login = async (_, { email, password }, req) => {
-    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+export const login = async (_, { email, password }, ctx) => {
+    let ip = ctx.headers['x-forwarded-for'] || ctx.connection.remoteAddress;
     email = email.toLowerCase();
 
     const client = await Client.findOne({ email });
@@ -42,8 +42,8 @@ export const login = async (_, { email, password }, req) => {
             try {
                 await redisClient.del(attempts);
                 await redisClient.del(key);
-            } catch {
-
+            } catch (e) {
+                console.log(e)
             }
 
             return {
@@ -52,11 +52,11 @@ export const login = async (_, { email, password }, req) => {
                 authenticatedClient: {
                     client: {
                         _id: client._id,
-                        firstname: decryptData(email, client.firstname),
-                        lastname: decryptData(email, client.lastname),
+                        firstname: decryptAppData(client.firstname),
+                        lastname: decryptAppData(client.lastname),
                         email: client.email,
-                        phone: decryptData(email, client.phone),
-                        birthdate: decryptData(email, client.birthdate),
+                        phone: decryptAppData(client.phone),
+                        birthdate: decryptAppData(client.birthdate),
                         createdAt: client.createdAt,
                         updatedAt: client.updatedAt
                     },
@@ -93,7 +93,7 @@ export const login = async (_, { email, password }, req) => {
                             to: email,
                             subject: 'Seguridad de la cuenta',
                             text: 'Seguridad de la cuenta',
-                            html: verifyAccountLayout(decryptData(email, client.firstname))
+                            html: verifyAccountLayout(decryptAppData(email, client.firstname))
                         });
                         console.log(token);
 

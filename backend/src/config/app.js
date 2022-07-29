@@ -20,7 +20,7 @@ const configure = async () => {
             console.log('No admin users found');
             console.log('Creating a new admin user...');
 
-            let username, password, firstname, lastname;
+            let username, password, firstname, lastname, phone;
             const reading = readline.createInterface({
                 input: process.stdin,
                 output: process.stdout
@@ -51,7 +51,9 @@ const configure = async () => {
                 lastname: encryptAppData(lastname),
                 email: username,
                 password: await bcrypt.hash(password, 12),
-                rol: 'ADMIN'
+                phone: encryptAppData("UNDEFINED"),
+                rol: 'ADMIN',
+                status: 'ACTIVE'
             });
             console.log('Admin user created');
             console.log('Your password is: ', password);

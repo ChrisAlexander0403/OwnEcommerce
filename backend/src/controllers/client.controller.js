@@ -8,6 +8,7 @@ import confirmAccountLayout from "../mails/confirmAccount.layout";
 import transporter from "../config/mailer";
 import { generateToken, getTokenData } from "../utils/authentication";
 import isPasswordInUse from "../helpers/isPasswordInUse";
+import errors from "../constants/errors";
 
 export const clientRegister = async (_, { firstname, lastname, email, password, phone, birthdate }, ctx) => {
     email = email.toLowerCase();
@@ -49,11 +50,7 @@ export const clientRegister = async (_, { firstname, lastname, email, password, 
                 message: "Client created succesfully"
             };
         } catch (err){
-            console.log(err)
-            return {
-                status: 500,
-                message: "Something went wrong, try again later"
-            }
+            return errors.error500;
         }
     }
 }

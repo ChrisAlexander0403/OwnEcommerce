@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 const shippingAddressSchema = new Schema({
+    fullName: { type: String, required: true },
     name: { type: String, required: true },
     street: { type: String, required: true },
     number: { type: String, required: true },
@@ -10,6 +11,8 @@ const shippingAddressSchema = new Schema({
     country: { type: String, required: true },
     zipCode: { type: String, required: true },
     location: String,
+    lat: Number,
+    lng: Number,
     status: { type: String, default: "1" },
     client: { type: Schema.Types.ObjectId, ref: 'Client', required: true }
 }, {
